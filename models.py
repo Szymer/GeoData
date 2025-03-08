@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 
 class Language(BaseModel):
@@ -54,12 +54,12 @@ class IPGeolocation(BaseModel):
     zip: str
     latitude: float
     longitude: float
-    msa: str
-    dma: str
+    msa: str = Field(default=None)
+    dma: str = Field(default=None)
     radius: Optional[float]
     ip_routing_type: Optional[str]
     connection_type: Optional[str]
     location: Location
-    time_zone: TimeZone
-    currency: Currency
-    connection: Connection
+    time_zone: TimeZone =  Field(default=None)
+    currency: Currency = Field(default=None)
+    connection: Connection = Field(default=None)

@@ -9,7 +9,8 @@
             "args": [],
             "jinja": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}"
+                "PYTHONPATH": "${workspaceFolder}",
+                "IPSTACK_API_KEY": "bad13ef04a9e0eddf0db0c0857f038d1"
             },
             "console": "integratedTerminal"
         }
