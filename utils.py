@@ -1,12 +1,11 @@
 import json
 import socket
 import os
-import sys
 import requests
+from sqlalchemy.orm import Session
 from pydantic import ValidationError
 from models import IPGeolocation
-
-
+from celery_worker import add_record_to_db
 IPSTACK_URL='http://api.ipstack.com/'
 
 
@@ -26,41 +25,44 @@ def geodata_api_call(ip: str) -> IPGeolocation:
     """
     if  ip.split(".")[-1].isdigit() == False:
         ip = get_ip(ip)
-    try:
-        response = requests.get(IPSTACK_URL+ ip + "?access_key=" + os.getenv("IPSTACK_API_KEY"))
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        raise SystemExit(e)
-    if response.status_code == 104:
-        raise Exception("Usage limit reached")
-    data = response.json()
-    try:
-        val = data.model_validation(data)
-    except ValidationError as e:
-        print(e)
-        return
-    result = IPGeolocation(**data)
+    if os.getenv("TEST") == "true":
+        with open("test.json") as f:
+            data = json.load(f)
+        result = IPGeolocation(**data)
+        return result
+    else:
+        try:
+            response = requests.get(IPSTACK_URL+ ip + "?access_key=" + os.getenv("IPSTACK_API_KEY"))
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        if response.status_code == 104:
+            raise Exception("Usage limit reached")
+        data = response.json()
+        try:
+            val = IPGeolocation.model_validation(data)
+        except ValidationError as e:
+            print(e)
+            return
+        result = IPGeolocation(**data)
     return result
     
-def send_to_queue(data: IPGeolocation) -> None:
-    
-    return
     
 def get_geo_data(item: str) -> dict:
     geo_data = geodata_api_call(item)
-    send_to_queue(geo_data)
+    return geo_data
     
     
-def add_data(item: str) -> None:
-    get_geo_data(item)
+def add_data(db:Session, item: str) -> None:
+    data =get_geo_data(item)
+    task = add_record_to_db(db, data)
+    return  {"task_id": task['ip'], "status": task['status']}
+
+
+def get_data(db:Session, item:str) -> dict:
     return
 
 
-def get_data(item:str):
-    pass
-    return
-
-
-def update_item(item:str):
+def update_data(item:str):
     pass
     return

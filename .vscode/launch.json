@@ -8,9 +8,13 @@
             "program": "${workspaceFolder}/main.py",
             "args": [],
             "jinja": true,
+            // "TEST": true,
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
-                "IPSTACK_API_KEY": "bad13ef04a9e0eddf0db0c0857f038d1"
+                "IPSTACK_API_KEY": "bad13ef04a9e0eddf0db0c0857f038d1",
+                "TEST": "true",
+                "DATABASE_URL": "postgresql://api:testdb@localhost/geodb"
+                
             },
             "console": "integratedTerminal"
         }
