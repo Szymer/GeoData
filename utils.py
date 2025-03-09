@@ -59,12 +59,3 @@ def add_data(db:Session, item: str) -> None:
     data =get_geo_data(item)
     task = add_record_to_db(db, data)
     return  {"status": task.get('status'), "Record": task.get('record'), }
-
-
-def get_data(db:Session, item:str) -> dict:
-    return
-
-
-def update_data(item:str):
-    pass
-    return

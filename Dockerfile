@@ -1,4 +1,4 @@
-# Use Python 3.9 as the base image
+# Use Python 3.11 as the base image
 FROM python:3.11
 
 # Set working directory inside the container

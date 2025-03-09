@@ -8,9 +8,9 @@ celery_app = Celery(
 )
 
 @celery_app.task
-def add_record_to_db(db, ip_data: IPGeolocation):
-    from curd import insert_ip_data
-    record = insert_ip_data(db=db, ip_data = ip_data)
+def update_record_in_db(db, ip: str, payload: dict):
+    from curd import update_ip_data
+    record = update_ip_data(db=db, ip = ip, payload = payload)
     status =  "sucess" if record.get("message")== None else record.get("message")
     return {"status": status, "record": record.get("data")}
 
@@ -18,5 +18,4 @@ def add_record_to_db(db, ip_data: IPGeolocation):
 def add_record_to_db(db, ip_data: IPGeolocation):
     from curd import insert_ip_data
     record = insert_ip_data(db=db, ip_data = ip_data)
-    
     return {"status": record.get('message'), "record": record.get("data")}

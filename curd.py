@@ -125,4 +125,44 @@ def insert_ip_data(db: Session, ip_data: IPGeolocation):
         db.close()
 
 
-    
+def update_ip_data( db: Session, ip: str, payload : dict):
+    dupa =1 
+    ip_record = read_ip_data(db=db, ip=ip)
+    if not ip_record:
+        return {"error": "Record not found"}
+    update_data = payload
+    # Aktualizacja pól bezpośrednio w tabeli IPData
+    for key, value in update_data.items():
+        if hasattr(ip_record, key) and key not in ["location", "time_zone", "currency", "connection"]:
+            setattr(ip_record, key, value)
+
+    # Aktualizacja relacji: Location
+    if "location" in update_data and ip_record.location:
+        loc_data = update_data["location"]
+        for key, value in loc_data.items():
+            if hasattr(ip_record.location, key):
+                setattr(ip_record.location, key, value)
+
+    # Aktualizacja relacji: TimeZone
+    if "time_zone" in update_data and ip_record.time_zone:
+        tz_data = update_data["time_zone"]
+        for key, value in tz_data.items():
+            if hasattr(ip_record.time_zone, key):
+                setattr(ip_record.time_zone, key, value)
+
+    # Aktualizacja relacji: Currency
+    if "currency" in update_data and ip_record.currency:
+        cur_data = update_data["currency"]
+        for key, value in cur_data.items():
+            if hasattr(ip_record.currency, key):
+                setattr(ip_record.currency, key, value)
+
+    # Aktualizacja relacji: Connection
+    if "connection" in update_data and ip_record.connection:
+        conn_data = update_data["connection"]
+        for key, value in conn_data.items():
+            if hasattr(ip_record.connection, key):
+                setattr(ip_record.connection, key, value)
+
+    db.commit()
+    return {"message": "Record updated", "data": IPGeolocation.model_validate(ip_record)}

@@ -26,7 +26,7 @@ class Location(BaseModel):
                 lan = values.languages
             except:
                 return values
-            if lan  is  not None:    
+            if lan  is  not None and not isinstance(lan, list):    
                 lan = json.loads(lan)
                 values.languages = lan
             return values
