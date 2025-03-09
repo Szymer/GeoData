@@ -16,8 +16,9 @@ def read_root():
 
 @router.get("/item/get/{item_id}")
 def read_item(item_id: str, db: Session = Depends(get_db)):
-    data = read_ip_data(db, item_id)
-    return data
+    data = read_ip_data(db, item_id) 
+    result = data if data else {"message": "Record not found"}
+    return result
 
 
 @router.post("/item/add/{item_id}")

@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 from pydantic import ValidationError
 from models import IPGeolocation
 from celery_worker import add_record_to_db
+
+
 IPSTACK_URL='http://api.ipstack.com/'
 
 
@@ -56,7 +58,7 @@ def get_geo_data(item: str) -> dict:
 def add_data(db:Session, item: str) -> None:
     data =get_geo_data(item)
     task = add_record_to_db(db, data)
-    return  {"task_id": task['ip'], "status": task['status']}
+    return  {"status": task.get('status'), "Record": task.get('record'), }
 
 
 def get_data(db:Session, item:str) -> dict:
