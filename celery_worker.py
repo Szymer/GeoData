@@ -1,6 +1,6 @@
 from celery import Celery
 from models import IPGeolocation
-
+from utils import  geodata_api_call
 celery_app = Celery(
     "tasks",
     broker="redis://localhost:6379/0",
@@ -15,7 +15,8 @@ def update_record_in_db(db, ip: str, payload: dict):
     return {"status": status, "record": record.get("data")}
 
 @celery_app.task
-def add_record_to_db(db, ip_data: IPGeolocation):
+def add_record_to_db(db, ip:str):
     from curd import insert_ip_data
+    ip_data = geodata_api_call(ip)
     record = insert_ip_data(db=db, ip_data = ip_data)
     return {"status": record.get('message'), "record": record.get("data")}
