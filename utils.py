@@ -49,13 +49,8 @@ def geodata_api_call(ip: str) -> IPGeolocation:
         result = IPGeolocation(**data)
     return result
     
-    
-def get_geo_data(item: str) -> dict:
-    geo_data = geodata_api_call(item)
-    return geo_data
-    
-    
+
 def add_data(db:Session, item: str) -> None:
-    data =get_geo_data(item)
+    data =geodata_api_call(item)
     task = add_record_to_db(db, data)
     return  {"status": task.get('status'), "Record": task.get('record'), }
