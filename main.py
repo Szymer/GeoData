@@ -7,7 +7,14 @@ app = FastAPI()
 
         
 def init_db():
-    Base.metadata.create_all(bind=engine)
+    try:
+        Base.metadata.drop_all(bind=engine)
+    except Exception as e:
+        raise SystemExit(e)
+
+        
+
+  
 
 init_db()
 

@@ -42,6 +42,18 @@ def geodata_api_call(ip: str) -> IPGeolocation:
             raise SystemExit(e)
         if response.status_code == 104:
             raise Exception("Usage limit reached")
+        if response.status_code == 101:
+            raise Exception("invalid_access_key")
+        if response.status_code == 103:
+            raise Exception("invalid_api_function")
+        if response.status_code == 104:
+            raise Exception("Usage limit reached")
+        if response.status_code == 301:
+            raise Exception("nvalid_fields	One or more invalid fields were specified using the fields parameter.")
+        if response.status_code == 302:
+            raise Exception("too_many_ips	Too many IPs have been specified for the Bulk Lookup Endpoint. (max. 50)")
+        if response.status_code == 303:
+            raise Exception("atch_not_supported_on_plan	The Bulk Lookup Endpoint is not supported on the current subscription plan")
         data = response.json()
         try:
             result = IPGeolocation.model_validate(data)
