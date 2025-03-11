@@ -18,5 +18,11 @@ After we finish reviewing the solution, we'll invite you to Sofomo's office (or 
 
 
 
+Project Description
+The application allows the user to input an IP address or URL, which is then processed by the system. To ensure efficiency and scalability, operations related to adding and modifying records in the database are queued using Celery, with Redis acting as the message broker. This approach enables the application to handle multiple requests simultaneously, preventing the main application thread from being blocked.
 
-docker run -d --name redis -p 6379:6379 redis
+Additionally, Pydantic is used for input data validation and modeling, ensuring strict data validation and automatic type conversion. This improves the application's reliability and maintainability.
+
+The application can be utilized in various scenarios, such as monitoring server availability, storing and updating DNS records, or analyzing network connections. The architecture based on Celery and Redis allows for easy scaling and future feature expansions.
+
+
