@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: FastAPI",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": [],
+            "jinja": true,
+            // "TEST": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}",
+                "IPSTACK_API_KEY": "bad13ef04a9e0eddf0db0c0857f038d1",
+                // "TEST": "true",
+                "DATABASE_URL": "postgresql://api:testdb@localhost/geodb"
+                // "DATABASE_URL": "postgresql://api:testdb@192.168.1.1:5432/geodb"
+                // "DATABASE_URL": "postgresql://api:testdb@db/geodb"
+                
+            },
+            "console": "integratedTerminal"
+        }
+    ]
+}
