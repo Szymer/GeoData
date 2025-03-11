@@ -2,10 +2,10 @@ import json
 import socket
 import os
 import requests
-from sqlalchemy.orm import Session
-from pydantic import ValidationError
+# from sqlalchemy.orm import Session
+from pydantic import ValidationError, model_validator
 from models import IPGeolocation
-from celery_worker import add_record_to_db
+# from celery_worker import add_record_to_db
 
 
 IPSTACK_URL='http://api.ipstack.com/'
@@ -27,6 +27,8 @@ def geodata_api_call(ip: str) -> IPGeolocation:
     """
     if  ip.split(".")[-1].isdigit() == False:
         ip = get_ip(ip)
+        
+    # for debug only 
     if os.getenv("TEST") == "true":
         with open("test.json") as f:
             data = json.load(f)
@@ -42,15 +44,10 @@ def geodata_api_call(ip: str) -> IPGeolocation:
             raise Exception("Usage limit reached")
         data = response.json()
         try:
-            val = IPGeolocation.model_validation(data)
+            result = IPGeolocation.model_validate(data)
         except ValidationError as e:
             print(e)
-            return
-        result = IPGeolocation(**data)
+            return {"message": "Invalid data", "data": data}
     return result
     
 
-def add_data(db:Session, item: str) -> None:
-    data =geodata_api_call(item)
-    task = add_record_to_db(db, data)
-    return  {"status": task.get('status'), "Record": task.get('record'), }

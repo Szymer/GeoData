@@ -3,6 +3,8 @@ from pydantic import BaseModel, Field, model_validator
 from typing import List, Optional
 from db_models import Location as Loc, TimeZone as Tz, Currency as Cur, Connection as Con
 
+
+
 class Language(BaseModel):
     code: str
     name: str
@@ -75,15 +77,15 @@ class IPGeolocation(BaseModel):
     zip: str
     latitude: float
     longitude: float
-    msa: str = Field(default=None)
-    dma: str = Field(default=None)
+    msa: Optional[str] = Field(default=None)
+    dma: Optional[str] = Field(default=None)
     radius: Optional[float]
     ip_routing_type: Optional[str]
     connection_type: Optional[str]
     location: Location
-    time_zone: TimeZone =  Field(default=None)
-    currency: Currency = Field(default=None)
-    connection: Connection = Field(default=None)
+    time_zone: Optional[TimeZone] =  Field(default=None)
+    currency: Optional[Currency] = Field(default=None)
+    connection: Optional[Connection] = Field(default=None)
 
 
     class Config:
