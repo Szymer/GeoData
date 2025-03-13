@@ -11,9 +11,6 @@ functions to read, insert and update data in database
 """
 
 
-
-
-
 def read_ip_data(db: Session, ip: str):
     "Read data from database"
     #
@@ -53,9 +50,9 @@ def insert_ip_data(db: Session, ip_data: IPGeolocation):
                 calling_code=ip_data.location.calling_code,
                 is_eu=ip_data.location.is_eu
                     )
-                db.add(location)
-                db.commit()
-                db.refresh(location)
+                # db.add(location)
+                # db.commit()
+                # db.refresh(location)S
             #check if time_zone already exists 
         if ip_data.time_zone:
             existing_time_zone = db.query(TimeZone).filter_by(tz_id=ip_data.time_zone.id).first()
@@ -69,9 +66,9 @@ def insert_ip_data(db: Session, ip_data: IPGeolocation):
                     code=ip_data.time_zone.code,
                     is_daylight_saving=ip_data.time_zone.is_daylight_saving
                 )
-                db.add(time_zone)
-                db.commit()
-                db.refresh(time_zone)
+                # db.add(time_zone)
+                # db.commit()
+                # db.refresh(time_zone)
         #check if currency already exists
         if ip_data.currency:
             existing_currency = db.query(Currency).filter_by(code=ip_data.currency.code).first()
@@ -85,9 +82,9 @@ def insert_ip_data(db: Session, ip_data: IPGeolocation):
                     symbol=ip_data.currency.symbol,
                     symbol_native=ip_data.currency.symbol_native
                 )
-                db.add(currency)
-                db.commit()
-                db.refresh(currency)
+                # db.add(currency)
+                # db.commit()
+                # db.refresh(currency)
         #check if connection already exists
         if ip_data.connection:
             existing_connection = db.query(Connection).filter_by(asn=ip_data.connection.asn).first()
@@ -105,9 +102,9 @@ def insert_ip_data(db: Session, ip_data: IPGeolocation):
                     isic_code=ip_data.connection.isic_code,
                     naics_code=ip_data.connection.naics_code
                 )
-                db.add(connection)
-                db.commit()
-                db.refresh(connection)
+                # db.add(connection)
+                # db.commit()
+                # db.refresh(connection)
 
         ip_record = IPData(
             ip=ip_data.ip,
@@ -132,9 +129,9 @@ def insert_ip_data(db: Session, ip_data: IPGeolocation):
             currency_id=currency.id if ip_data.currency else None,
             connection_id=connection.id if ip_data.connection else None
         )
-        db.add(ip_record)
+        db.add(ip_record, connection, time_zone, currency)  
         db.commit()
-        db.refresh(ip_record)
+        
 
         return {"message": "Success" , "data": IPGeolocation.model_validate(ip_record)}
     except Exception as e:
